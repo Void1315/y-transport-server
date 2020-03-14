@@ -1,8 +1,33 @@
 package main
 
-import "github.com/y-transport-server/router"
+import (
+	"fmt"
+	"log"
+	"net/http"
 
+	"github.com/y-transport-server/pkg/setting"
+	"github.com/y-transport-server/router"
+)
+
+func init() {
+	setting.Setup()
+}
 func main() {
 	r := router.InitRouter()
-	r.Run(":9090")
+	readTimeout := setting.ServerSetting.ReadTimeout
+	writeTimeout := setting.ServerSetting.WriteTimeout
+	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)
+	maxHeaderBytes := 1 << 20
+
+	server := &http.Server{
+		Addr:           endPoint,
+		Handler:        r,
+		ReadTimeout:    readTimeout,
+		WriteTimeout:   writeTimeout,
+		MaxHeaderBytes: maxHeaderBytes,
+	}
+
+	log.Printf("[info] start http server listening http://127.0.0.1%s", endPoint)
+
+	server.ListenAndServe()
 }
