@@ -1,26 +1,26 @@
-package models
+package model
 
 import (
 	"fmt"
-	"log"
-
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/y-transport-server/pkg/setting"
+	"log"
 )
 
-var db *gorm.DB
+var Db *gorm.DB
 
 type Model struct {
-	ID        int `gorm:"primary_key" json:"id"`
-	CreatedAt int `json:"created_at"`
-	UpdatedAt int `json:"updated_at"`
-	DeletedAt int `json:"deleted_at"`
+	ID        uint `gorm:"primary_key" json:"id"`
+	CreatedAt int  `json:"created_at"`
+	UpdatedAt int  `json:"updated_at"`
+	DeletedAt int  `json:"deleted_at"`
 }
 
 // Setup initializes the database instance
 func Setup() {
 	var err error
-	db, err = gorm.Open(setting.DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	Db, err = gorm.Open(setting.DatabaseSetting.Type, fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		setting.DatabaseSetting.User,
 		setting.DatabaseSetting.Password,
 		setting.DatabaseSetting.Host,
@@ -29,7 +29,7 @@ func Setup() {
 	if err != nil {
 		log.Fatalf("models.Setup err: %v", err)
 	}
-	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+	gorm.DefaultTableNameHandler = func(Db *gorm.DB, defaultTableName string) string {
 		return setting.DatabaseSetting.TablePrefix + defaultTableName
 	}
 }
