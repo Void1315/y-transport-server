@@ -2,16 +2,20 @@ package model
 
 type Auth struct {
 	ID       int    `gorm:"primary_key" json:"id"`
-	Username string `json:"username"`
+	Phone    string `json:"phone"`
 	Password string `json:"password"`
 }
 
-func CheckAuth(username, password string) bool {
+func CheckAuth(phone string, password string) bool {
 	var auth Auth
-	Db.Select("id").Where(Auth{Username: username, Password: password}).First(&auth)
+	Db.Select("id").Where(Auth{Phone: phone, Password: password}).First(&auth)
 	if auth.ID > 0 {
 		return true
 	}
 
 	return false
+}
+
+func GetJWTUser() {
+
 }

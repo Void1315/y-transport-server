@@ -1,31 +1,29 @@
 package util
 
 import (
-	"time"
-
 	jwt "github.com/dgrijalva/jwt-go"
-
 	"github.com/y-transport-server/pkg/setting"
+	"time"
 )
 
-var jwtSecret = []byte(setting.JwtSecret)
+var jwtSecret []byte
 
 type Claims struct {
-	Username string `json:"username"`
+	Phone    string `json:"phone"`
 	Password string `json:"password"`
 	jwt.StandardClaims
 }
 
-func GenerateToken(username, password string) (string, error) {
+func GenerateToken(phone string, password string) (string, error) {
 	nowTime := time.Now()
-	expireTime := nowTime.Add(3 * time.Hour)
-
+	expireTime := nowTime.Add(time.Duration(setting.JwtSetting.ExpireTime) * time.Hour)
+	// expireTime := nowTime.Add(24 * time.Hour)
 	claims := Claims{
-		username,
+		phone,
 		password,
 		jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "gin-blog",
+			Issuer:    "y-transport",
 		},
 	}
 

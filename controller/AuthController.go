@@ -1,29 +1,27 @@
 package controller
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
+	"github.com/y-transport-server/pkg/logging"
 )
 
-type signUp struct {
-	Email    string `valid:"Required; MaxSize(30);Email"`
-	Password string `valid:"Required; MaxSize(30);"`
+type checkAuth struct {
+	Token string `json:"token";valid:"Required;"`
 }
 
-//SignUp 注册
-func SignUp(c *gin.Context) {
+//CheckAuth 检测身份
+func Check(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
-		form signUp
+		form checkAuth
 	)
-
 	httpCode, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
 		appG.Response(httpCode, errCode, nil)
 		return
 	}
-	c.String(http.StatusOK, "pong")
+	logging.Info("登录")
+	appG.Response(httpCode, e.SUCCESS, nil)
 }
