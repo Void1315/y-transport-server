@@ -15,25 +15,22 @@ func InitRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("wqld1315"))
 	router.Use(sessions.Sessions("ysession", store))
 	testRouter(router)
-	signUpRouter(router)
 	authRouter(router)
 	return router
 }
 func testRouter(router *gin.Engine) {
 	router.GET("/ping", controller.Ping)
 }
-func signUpRouter(router *gin.Engine) {
-	signUp := router.Group("/sign_up")
-	{
-		signUp.POST("/phone", controller.SignUpPhone)
-		signUp.POST("/code", controller.SignUpCode)
-		signUp.POST("/create", controller.SignUpCreate)
-	}
-}
 func authRouter(router *gin.Engine) {
 	auth := router.Group("/auth")
-	auth.Use(jwt.JWT())
 	{
-		auth.POST("/check", controller.Check)
+		auth.POST("/check", jwt.JWT(), controller.Check)
+		auth.POST("/sign_in", controller.SignIn)
+		signUp := auth.Group("/sign_up")
+		{
+			signUp.POST("/phone", controller.SignUpPhone)
+			signUp.POST("/code", controller.SignUpCode)
+			signUp.POST("/create", controller.SignUpCreate)
+		}
 	}
 }
