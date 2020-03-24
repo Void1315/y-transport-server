@@ -29,7 +29,7 @@ func authRouter(router *gin.Engine) {
 		signUp := auth.Group("/sign_up")
 		{
 			signUp.POST("/phone", controller.SignUpPhone)
-			signUp.POST("/code", controller.SignUpCode)
+			// signUp.POST("/code", controller.SignUpCode)
 			signUp.POST("/create", controller.SignUpCreate)
 		}
 	}

@@ -32,6 +32,8 @@ type signUpCode struct {
 }
 
 type signUpCreate struct {
+	Phone    string `json:"phone";valid:"Required; MaxSize(20);"`
+	Code     string `json:"code";valid:"Required; MaxSize(5);"`
 	Password string `json:"password";valid:"Required; MaxSize(20);MinSize(6);"`
 }
 
@@ -83,18 +85,26 @@ func SignUpCreate(c *gin.Context) {
 		return
 	}
 	session := sessions.Default(c)
-	phone := session.Get("phone")
-	if phoneStr, ok := phone.(string); ok {
-		salt, hashPassword, token, err := service.CreateSignUp(c, phoneStr, form.Password)
-		if err != nil {
-			logging.Warn(err)
-			appG.Response(http.StatusInternalServerError, e.ERROR, nil)
-			return
+	phone := form.Phone
+	sessionCode := session.Get("sms_code")
+	if sessionCodeStr, ok := sessionCode.(string); ok {
+		if sessionCodeStr == form.Code {
+			salt, hashPassword, token, err := service.CreateSignUp(c, phone, form.Password)
+			if err != nil {
+				logging.Warn(err)
+				appG.Response(http.StatusOK, e.ERROR_AUTH_SMS_CODE, nil)
+				return
+			} else {
+				model.CreatUser(phone, form.Password, hashPassword, salt, token)
+				appG.Response(http.StatusOK, e.SUCCESS, map[string]string{
+					"token": token,
+				})
+				return
+			}
 		} else {
-			model.CreatUser(phoneStr, form.Password, hashPassword, salt, token)
-			appG.Response(http.StatusOK, e.SUCCESS, map[string]string{
-				"token": token,
-			})
+			logging.Warn("验证码错误")
+			appG.Response(http.StatusOK, e.ERROR_AUTH_SMS_CODE, nil)
+			return
 		}
 	} else {
 		appG.Response(httpCode, e.ERROR, nil)
