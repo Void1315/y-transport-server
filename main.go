@@ -9,6 +9,7 @@ import (
 	"github.com/y-transport-server/model"
 	"github.com/y-transport-server/pkg/logging"
 	"github.com/y-transport-server/pkg/setting"
+	"github.com/y-transport-server/pkg/util"
 	"github.com/y-transport-server/router"
 )
 
@@ -17,11 +18,12 @@ func init() {
 	model.Setup()
 	migration.Setup(model.Db) // 第一次运行 迁移表结构
 	logging.Setup()
-	// util.Setup()
+	util.Setup()
 
 }
 func main() {
 	r := router.InitRouter()
+
 	readTimeout := setting.ServerSetting.ReadTimeout
 	writeTimeout := setting.ServerSetting.WriteTimeout
 	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)

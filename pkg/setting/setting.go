@@ -8,7 +8,6 @@ import (
 )
 
 type App struct {
-	JwtSecret string
 	PageSize  int
 	PrefixUrl string
 
@@ -29,6 +28,13 @@ type App struct {
 }
 
 var AppSetting = &App{}
+
+type Jwt struct {
+	JwtSecret  string
+	ExpireTime int
+}
+
+var JwtSetting = &Jwt{}
 
 type Server struct {
 	RunMode      string
@@ -74,7 +80,7 @@ func Setup() {
 	mapTo("server", ServerSetting)
 	mapTo("database", DatabaseSetting)
 	mapTo("redis", RedisSetting)
-
+	mapTo("jwt", JwtSetting)
 	AppSetting.ImageMaxSize = AppSetting.ImageMaxSize * 1024 * 1024
 	ServerSetting.ReadTimeout = ServerSetting.ReadTimeout * time.Second
 	ServerSetting.WriteTimeout = ServerSetting.WriteTimeout * time.Second
