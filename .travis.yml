@@ -1,9 +1,8 @@
 jobs:
   include:
   - stage: dev
-    branches:
-      only:
-      - dev
+    name: "dev run"
+    if: branch = dev
     addons:
       ssh_known_hosts: 34.85.95.83
     language: go
@@ -18,9 +17,8 @@ jobs:
     - ssh root@34.85.95.83 'cd /root/work/go/y-transport-server && sh ./build/dev.sh'
   include:
   - stage: prd
-    branches:
-      only:
-      - master
+    name: "prd run"
+    if: branch = master
     language: go
     go:
     - '1.14'
