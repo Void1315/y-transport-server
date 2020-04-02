@@ -11,7 +11,19 @@ echo "编译完成"
 ps -aux|grep yhy-run| grep -v grep | awk '{print $2}' | xargs -r kill -9
 echo "关闭进程"
 # 重新启动
-nohup ./output/yhy-run
-echo "重启进程"
-echo "正常退出"
-exit
+nohup ./output/yhy-run &
+try_num=0
+while([ ! -n "$(ps -aux|grep yhy-run| grep -v grep | awk '{print $2}')" ])
+do
+    sleep 1
+    try_num+=1
+    if [ "$try_num" -lt 60 ]
+    then
+        echo "重启进程中..."
+    else
+        echo "重启进程超时"
+        exit 1
+    fi
+done
+echo "启动成功"
+exit 0
