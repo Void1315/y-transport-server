@@ -11,5 +11,5 @@ echo "编译完成"
 ps -aux|grep yhy-run| grep -v grep | awk '{print $2}' | xargs -r kill -9
 echo "关闭进程"
 # 重新启动
-nohup ./output/run &
+nohup ./output/yhy-run &
 echo "重启进程"
