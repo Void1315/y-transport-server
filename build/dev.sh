@@ -13,3 +13,5 @@ echo "关闭进程"
 # 重新启动
 nohup ./output/yhy-run &
 echo "重启进程"
+echo "正常退出"
+exit
