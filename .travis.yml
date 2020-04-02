@@ -1,5 +1,27 @@
-language: go
-
-go:
-- "1.14"
-script: echo "no test"
+jobs:
+  include:
+  - stage: dev
+    branches:
+    only:
+    - dev
+    language: go
+    go:
+    - '1.14'
+    script: echo "no test in dev"
+    before_install:
+    - openssl aes-256-cbc -K $encrypted_d523664c6f66_key -iv $encrypted_d523664c6f66_iv
+      -in id_rsa.enc -out ~/.ssh/id_rsa -d
+    - chmod 600 ~/.ssh/id_rsa
+  include:
+  - stage: prd
+    branches:
+    only:
+    - master
+    language: go
+    go:
+    - '1.14'
+    script: echo "no test in master"
+    before_install:
+    - openssl aes-256-cbc -K $encrypted_d523664c6f66_key -iv $encrypted_d523664c6f66_iv
+      -in id_rsa.enc -out ~/.ssh/id_rsa -d
+    - chmod 600 ~/.ssh/id_rsa
