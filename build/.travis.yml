@@ -12,6 +12,8 @@ jobs:
     - openssl aes-256-cbc -K $encrypted_d523664c6f66_key -iv $encrypted_d523664c6f66_iv
       -in build/id_rsa.enc -out ~/.ssh/id_rsa -d
     - chmod 600 ~/.ssh/id_rsa
+    after_success:
+    - ssh root@34.85.95.83 'cd /root/work/go/y-transport-server && sh ./build/dev.sh'
   include:
   - stage: prd
     branches:
@@ -25,3 +27,5 @@ jobs:
     - openssl aes-256-cbc -K $encrypted_d523664c6f66_key -iv $encrypted_d523664c6f66_iv
       -in build/id_rsa.enc -out ~/.ssh/id_rsa -d
     - chmod 600 ~/.ssh/id_rsa
+    after_success:
+    - ssh root@107.167.186.8 'cd /root/work/go/y-transport-server && sh ./build/prd.sh'
