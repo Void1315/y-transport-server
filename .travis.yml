@@ -14,8 +14,7 @@ jobs:
       -in build/id_rsa.enc -out ~/.ssh/id_rsa -d
     - chmod 600 ~/.ssh/id_rsa
     after_success:
-    - ssh root@34.85.95.83 'cd /root/work/go/y-transport-server && sh ./build/dev.sh'
-  include:
+    - ssh root@34.85.95.83 'cd /root/work/go/y-transport-server && sh ./build/dev.sh && exit'
   - stage: prd
     name: "prd run"
     if: branch = master
@@ -30,4 +29,4 @@ jobs:
       -in build/id_rsa.enc -out ~/.ssh/id_rsa -d
     - chmod 600 ~/.ssh/id_rsa
     after_success:
-    - ssh root@107.167.186.8 'cd /root/work/go/y-transport-server && sh ./build/prd.sh'
+    - ssh root@107.167.186.8 'cd /root/work/go/y-transport-server && sh ./build/prd.sh && exit'
