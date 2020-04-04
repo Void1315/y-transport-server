@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
-	"github.com/y-transport-server/pkg/util"
 	"github.com/y-transport-server/service/admin_service"
 )
 
@@ -37,27 +36,14 @@ func Login(c *gin.Context) {
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR_ADMIN_USER, err)
 	} else {
-		origin := c.Request.Header.Get("Origin")
-		domain := util.GetDomain(origin)
-		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     "token", //你的cookie的名字
-			Value:    token,   //cookie值
-			Path:     "/",
-			MaxAge:   86400,
-			Domain:   domain,
-			Secure:   false,
-			HttpOnly: false,
-		})
-		// c.SetCookie("token", token, 86400, "/", domain, false, true)
-		appG.Response(http.StatusOK, e.SUCCESS, origin)
+		c.SetCookie("token", token, 86400, "/", "", false, false)
+		appG.Response(http.StatusOK, e.SUCCESS, nil)
 	}
 }
 
 //Logout 退出登录
 func Logout(c *gin.Context) {
 	appG := app.Gin{C: c}
-	origin := c.Request.Header.Get("Origin")
-	domain := util.GetDomain(origin)
-	c.SetCookie("token", "token", -1, "/", domain, false, true)
+	c.SetCookie("token", "token", -1, "/", "", false, false)
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
