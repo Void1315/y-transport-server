@@ -1,11 +1,13 @@
 package admin_controller
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
+	"github.com/y-transport-server/pkg/util"
 	"github.com/y-transport-server/service/admin_service"
-	"net/http"
 )
 
 type login struct {
@@ -33,9 +35,29 @@ func Login(c *gin.Context) {
 	adminService := admin_service.Admin{User: form.User, Password: form.Password}
 	token, err := adminService.Login()
 	if err != nil {
-		appG.Response(http.StatusInternalServerError, e.ERROR, err)
+		appG.Response(http.StatusOK, e.ERROR_ADMIN_USER, err)
 	} else {
-		c.SetCookie("token", token, 86400, "/", c.Request.Host, false, false)
-		appG.Response(http.StatusOK, e.SUCCESS, token)
+		origin := c.Request.Header.Get("Origin")
+		domain := util.GetDomain(origin)
+		http.SetCookie(c.Writer, &http.Cookie{
+			Name:     "token", //你的cookie的名字
+			Value:    token,   //cookie值
+			Path:     "/",
+			MaxAge:   86400,
+			Domain:   domain,
+			Secure:   false,
+			HttpOnly: false,
+		})
+		// c.SetCookie("token", token, 86400, "/", domain, false, true)
+		appG.Response(http.StatusOK, e.SUCCESS, origin)
 	}
+}
+
+//Logout 退出登录
+func Logout(c *gin.Context) {
+	appG := app.Gin{C: c}
+	origin := c.Request.Header.Get("Origin")
+	domain := util.GetDomain(origin)
+	c.SetCookie("token", "token", -1, "/", domain, false, true)
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }

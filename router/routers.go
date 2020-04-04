@@ -6,12 +6,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/controller"
 	"github.com/y-transport-server/controller/admin_controller"
+	"github.com/y-transport-server/middleware/cors"
 	"github.com/y-transport-server/middleware/jwt"
 )
 
 // InitRouter 初始化路由
 func InitRouter() *gin.Engine {
 	router := gin.Default()
+	router.Use(cors.Cors())
 	store := cookie.NewStore([]byte("wqld1315"))
 	router.Use(sessions.Sessions("ysession", store))
 	testRouter(router)
@@ -26,6 +28,7 @@ func adminRoute(router *gin.Engine) {
 	admin := router.Group("/admin")
 	{
 		admin.POST("/login", admin_controller.Login)
+		admin.GET("/logout", admin_controller.Logout)
 		admin.GET("/check", jwt.JWT(), admin_controller.AdminCheck)
 	}
 
