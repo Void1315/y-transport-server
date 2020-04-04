@@ -30,12 +30,12 @@ type Admin struct {
 // 	}
 // }
 
-// //GetUserWithPhone 通过phone查询用户
-// func GetUserWithPhone(phone string) (*User, error) {
-// 	var user User
-// 	err := Db.Where("phone=?", phone).First(&user).Error
-// 	if err != nil && err != gorm.ErrRecordNotFound {
-// 		return nil, err
-// 	}
-// 	return &user, err
-// }
+//GetAdminWithUser 通过user查询后台用户
+func GetAdminWithUser(user string) (*Admin, error) {
+	var admin Admin
+	err := Db.Where("user=?", user).First(&admin).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+	return &admin, err
+}

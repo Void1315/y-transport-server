@@ -21,7 +21,7 @@ func JWT() gin.HandlerFunc {
 			code = e.ERROR
 		}
 		if token == "" {
-			code = e.INVALID_PARAMS
+			code = e.ERROR_AUTH_CHECK_TOKEN_UNDEFINED
 		} else {
 			claims, err := util.ParseToken(token)
 			if err != nil {

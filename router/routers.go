@@ -1,11 +1,11 @@
 package router
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/controller"
+	"github.com/y-transport-server/controller/admin_controller"
 	"github.com/y-transport-server/middleware/jwt"
 )
 
@@ -25,8 +25,8 @@ func testRouter(router *gin.Engine) {
 func adminRoute(router *gin.Engine) {
 	admin := router.Group("/admin")
 	{
-		// admin.POST("/create", controller.CreateAdminUser)
-		admin.GET("/check", controller.AdminCheck)
+		admin.POST("/login", admin_controller.Login)
+		admin.GET("/check", jwt.JWT(), admin_controller.AdminCheck)
 	}
 
 }
