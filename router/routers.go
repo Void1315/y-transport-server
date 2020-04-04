@@ -16,11 +16,21 @@ func InitRouter() *gin.Engine {
 	router.Use(sessions.Sessions("ysession", store))
 	testRouter(router)
 	authRouter(router)
+	adminRoute(router)
 	return router
 }
 func testRouter(router *gin.Engine) {
 	router.GET("/ping", controller.Ping)
 }
+func adminRoute(router *gin.Engine) {
+	admin := router.Group("/admin")
+	{
+		// admin.POST("/create", controller.CreateAdminUser)
+		admin.GET("/check", controller.AdminCheck)
+	}
+
+}
+
 func authRouter(router *gin.Engine) {
 	auth := router.Group("/auth")
 	{

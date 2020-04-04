@@ -16,25 +16,25 @@ import (
 )
 
 type checkAuth struct {
-	Token string `json:"token";valid:"Required;"`
+	Token string `json:"token" valid:"Required;"`
 }
 
 type signIn struct {
-	Phone    string `json:"phone";valid:"Required;"`
-	Password string `json:"password";valid:"Required;"`
+	Phone    string `json:"phone" valid:"Required;"`
+	Password string `json:"password" valid:"Required;"`
 }
 type signUpPhone struct {
-	Phone string `json:"phone";valid:"Required; MaxSize(20);"`
+	Phone string `json:"phone" valid:"Required; MaxSize(20);"`
 }
 
 type signUpCode struct {
-	Code string `json:"code";valid:"Required; MaxSize(5);"`
+	Code string `json:"code" valid:"Required; MaxSize(5);"`
 }
 
 type signUpCreate struct {
-	Phone    string `json:"phone";valid:"Required; MaxSize(20);"`
-	Code     string `json:"code";valid:"Required; MaxSize(5);"`
-	Password string `json:"password";valid:"Required; MaxSize(20);MinSize(6);"`
+	Phone    string `json:"phone" valid:"Required; MaxSize(20);"`
+	Code     string `json:"code" valid:"Required; MaxSize(5);"`
+	Password string `json:"password" valid:"Required; MaxSize(20);MinSize(6);"`
 }
 
 //SignUpPhone 手机号注册
