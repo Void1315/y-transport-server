@@ -27,6 +27,11 @@ func testRouter(router *gin.Engine) {
 func adminRoute(router *gin.Engine) {
 	admin := router.Group("/admin")
 	{
+		route := admin.Group("/routes")
+		{
+			route.GET("/", admin_controller.RouteList)
+			route.GET("/:id", admin_controller.RouteOne)
+		}
 		admin.POST("/login", admin_controller.Login)
 		admin.GET("/logout", admin_controller.Logout)
 		admin.GET("/check", jwt.JWT(), admin_controller.AdminCheck)
