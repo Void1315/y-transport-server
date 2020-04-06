@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -12,18 +13,18 @@ import (
 var Db *gorm.DB
 
 type Model struct {
-	ID        uint `gorm:"primary_key" json:"id"`
-	CreatedAt int  `json:"created_at"`
-	UpdatedAt int  `json:"updated_at"`
-	DeletedAt int  `json:"deleted_at"`
+	ID        uint       `gorm:"primary_key" json:"id" mapstructure:"id"`
+	CreatedAt time.Time  `json:"created_at" mapstructure:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at" mapstructure:"updated_at"`
+	DeletedAt *time.Time `json:"deleted_at" mapstructure:"deleted_at"`
 }
 
 // PageJson 分页结构体
 type PageJson struct {
 	Data  interface{} `json:"data"`
-	Total uint32      `json:"total"`
-	Size  uint        `json:"size"`
-	Page  uint        ` json:"page"`
+	Total int         `json:"total"`
+	Size  int         `json:"size"`
+	Page  int         ` json:"page"`
 }
 
 // Setup initializes the database instance

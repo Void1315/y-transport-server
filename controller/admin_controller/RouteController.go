@@ -3,9 +3,9 @@ package admin_controller
 import (
 	"net/http"
 
-	"github.com/astaxie/beego/validation"
+	// "github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
-	"github.com/unknwon/com"
+
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
 	"github.com/y-transport-server/service/admin_service"
@@ -21,17 +21,15 @@ type A struct {
 }
 
 func RouteList(c *gin.Context) {
-	c.Header("X-Total-Count", "2")
 	var (
-		appG  = app.Gin{C: c}
-		valid = validation.Validation{}
+		appG = app.Gin{C: c}
 	)
-	sort := ""
-	if arg := c.Query("sort"); arg != "" {
-		sort = com.StrTo(arg).String()
-		valid.Required(sort, "sort")
+	data, err := bindListParam(c)
+	if err != nil {
+		appG.Response(e.ERROR, e.ERROR, nil)
+		return
 	}
-	resData := admin_service.RouteList()
+	resData := admin_service.RouteList(data)
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }
 
