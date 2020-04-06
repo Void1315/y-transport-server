@@ -2,10 +2,11 @@ package model
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/y-transport-server/pkg/setting"
-	"log"
 )
 
 var Db *gorm.DB
@@ -15,6 +16,14 @@ type Model struct {
 	CreatedAt int  `json:"created_at"`
 	UpdatedAt int  `json:"updated_at"`
 	DeletedAt int  `json:"deleted_at"`
+}
+
+// PageJson 分页结构体
+type PageJson struct {
+	Data  interface{} `json:"data"`
+	Total uint32      `json:"total"`
+	Size  uint        `json:"size"`
+	Page  uint        ` json:"page"`
 }
 
 // Setup initializes the database instance

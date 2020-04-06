@@ -6,7 +6,7 @@ import (
 
 //User Users 表结构
 type User struct {
-	gorm.Model
+	Model
 	Username   string `gorm:"size:50;DEFAULT:''" json:"username"`       // 列名为 `username` 用户名称
 	UsernameZh string `gorm:"size:10;DEFAULT:''" json:"username_zh"`    // 列名为 `username_zh` 用户中文名称
 	Email      string `gorm:"size:30;DEFAULT:''" json:"email"`          // 列名为 `email` 账户邮箱，

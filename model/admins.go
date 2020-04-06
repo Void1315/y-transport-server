@@ -6,7 +6,7 @@ import (
 
 //Admin Admins 表结构
 type Admin struct {
-	gorm.Model
+	Model
 	User     string `gorm:"size:20;NOT NULL;unique" json:"user"` // 列名为 `user` 用户名 登录账号 联合主键
 	Password string `gorm:"size:100;NOT NULL;" json:"password"`  // 列名为 `password` 密码的sha256值
 	Token    string `gorm:"size:512;DEFAULT:''" json:"token"`    // 列名为 `token` jwt登录凭证
