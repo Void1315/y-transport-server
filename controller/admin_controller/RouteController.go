@@ -11,13 +11,8 @@ import (
 	"github.com/y-transport-server/service/admin_service"
 )
 
-type Bid struct {
-	Id    string `json:"id"`
-	Title string `json:"title"`
-}
-type A struct {
-	Data  []Bid `json:"data"`
-	Total int   `json:"total"`
+type routeCreate struct {
+	PathJson string `json:"path_json" valid:"Required"`
 }
 
 func RouteList(c *gin.Context) {
@@ -35,5 +30,19 @@ func RouteList(c *gin.Context) {
 
 func RouteOne(c *gin.Context) {
 	appG := app.Gin{C: c}
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
+}
+
+//RouteCreate 创建路线
+func RouteCreate(c *gin.Context) {
+	var (
+		appG = app.Gin{C: c}
+		form routeCreate
+	)
+	_, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(http.StatusOK, errCode, nil)
+		return
+	}
 	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }
