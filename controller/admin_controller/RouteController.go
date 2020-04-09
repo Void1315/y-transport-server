@@ -2,6 +2,7 @@ package admin_controller
 
 import (
 	"net/http"
+	"strconv"
 
 	// "github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
@@ -30,7 +31,14 @@ func RouteList(c *gin.Context) {
 
 func RouteOne(c *gin.Context) {
 	appG := app.Gin{C: c}
-	appG.Response(http.StatusOK, e.SUCCESS, nil)
+	id, _ := strconv.Atoi(c.Param("id"))
+	adminService := admin_service.Route{Id: id}
+	result, err := adminService.RouteOne()
+	if err != nil {
+		appG.Response(e.ERROR, e.ERROR, nil)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, result)
 }
 
 //RouteCreate 创建路线
@@ -44,5 +52,10 @@ func RouteCreate(c *gin.Context) {
 		appG.Response(http.StatusOK, errCode, nil)
 		return
 	}
-	appG.Response(http.StatusOK, e.SUCCESS, nil)
+	adminService := admin_service.Route{PathJson: form.PathJson}
+	resData, err := adminService.RouteCreate()
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, nil)
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }

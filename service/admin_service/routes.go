@@ -10,6 +10,7 @@ import (
 )
 
 type Route struct {
+	Id       int    `json:"id"`
 	PathJson string `json:"path_json"`
 }
 
@@ -24,12 +25,16 @@ type ListParam struct {
 func RouteList(data *ListParam) model.PageJson {
 	routes := make([]model.Route, 0)
 	var routeModel model.Route
+	// model.Db.Find().Count()
 	if err := mapstructure.Decode(data.Filter, &routeModel); err != nil {
 		return model.PageJson{}
 	}
-	Db := model.Db.Where(&routeModel).Limit(data.Limit).Offset((data.Page - 1) * data.Limit)
+	Db := model.Db.Where(&routeModel).Limit(data.Limit).Offset((data.Page - 1) * data.Limit).Order(strings.Join(data.Sort[:], " "))
+	Db.Find(&routes)
+
 	var total = 0
-	Db.Order(strings.Join(data.Sort[:], " ")).Find(&routes).Count(&total)
+	model.Db.Model(&model.Route{}).Where(&routeModel).Count(&total)
+
 	page := model.PageJson{
 		Data:  routes,
 		Page:  data.Page,
@@ -40,6 +45,22 @@ func RouteList(data *ListParam) model.PageJson {
 }
 
 //RouteOne 单一
-func RouteOne() {
+func (r *Route) RouteOne() (*model.Route, error) {
+	route := &model.Route{}
 
+	if err := model.Db.First(&route, r.Id).Error; err != nil {
+		return nil, err
+	}
+	return route, nil
+}
+
+//RouteCreate 创建
+func (r *Route) RouteCreate() (*model.Route, error) {
+	route := &model.Route{
+		PathJson: r.PathJson,
+	}
+	if err := model.Db.Save(route).Error; err != nil {
+		return nil, err
+	}
+	return route, nil
 }
