@@ -32,6 +32,7 @@ func adminRoute(router *gin.Engine) {
 			route.GET("", admin_controller.RouteList)
 			route.POST("", admin_controller.RouteCreate)
 			route.GET("/:id", admin_controller.RouteOne)
+			route.POST("/edit/:id", admin_controller.RouteEdit)
 		}
 		admin.POST("/login", admin_controller.Login)
 		admin.GET("/logout", admin_controller.Logout)

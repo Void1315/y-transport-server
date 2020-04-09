@@ -10,8 +10,11 @@ import (
 )
 
 type Route struct {
-	Id       int    `json:"id"`
+	Id       uint   `json:"id"`
 	PathJson string `json:"path_json"`
+	Name     string `json:"name"`
+	Type     int    `json:"type"`    // 驾车方案
+	Comment  string `json:"comment"` // 说明注释
 }
 
 type ListParam struct {
@@ -58,6 +61,19 @@ func (r *Route) RouteOne() (*model.Route, error) {
 func (r *Route) RouteCreate() (*model.Route, error) {
 	route := &model.Route{
 		PathJson: r.PathJson,
+	}
+	if err := model.Db.Save(route).Error; err != nil {
+		return nil, err
+	}
+	return route, nil
+}
+
+func (r *Route) RouteEdit() (*model.Route, error) {
+	route := &model.Route{
+		Model:    model.Model{ID: r.Id},
+		PathJson: r.PathJson,
+		Comment:  r.Comment,
+		Name:     r.Name,
 	}
 	if err := model.Db.Save(route).Error; err != nil {
 		return nil, err
