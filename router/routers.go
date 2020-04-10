@@ -15,6 +15,7 @@ func InitRouter() *gin.Engine {
 	router := gin.Default()
 	router.Use(cors.Cors())
 	store := cookie.NewStore([]byte("wqld1315"))
+	router.Static("/static", "./static")
 	router.Use(sessions.Sessions("ysession", store))
 	testRouter(router)
 	authRouter(router)
@@ -33,6 +34,13 @@ func adminRoute(router *gin.Engine) {
 			route.POST("", admin_controller.RouteCreate)
 			route.GET("/:id", admin_controller.RouteOne)
 			route.POST("/edit/:id", admin_controller.RouteEdit)
+		}
+		driver := admin.Group("/driver")
+		{
+			driver.GET("", admin_controller.DriverList)
+			driver.POST("", admin_controller.DriverCreate)
+			driver.GET("/:id", admin_controller.DriverOne)
+			driver.POST("/edit/:id", admin_controller.DriverEdit)
 		}
 		admin.POST("/login", admin_controller.Login)
 		admin.GET("/logout", admin_controller.Logout)

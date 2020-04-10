@@ -61,6 +61,9 @@ func (r *Route) RouteOne() (*model.Route, error) {
 func (r *Route) RouteCreate() (*model.Route, error) {
 	route := &model.Route{
 		PathJson: r.PathJson,
+		Name:     r.Name,
+		Comment:  r.Comment,
+		Type:     r.Type,
 	}
 	if err := model.Db.Save(route).Error; err != nil {
 		return nil, err

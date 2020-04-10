@@ -15,7 +15,10 @@ import (
 )
 
 type routeCreate struct {
+	Name     string `json:"name" valid:"Required"`
 	PathJson string `json:"path_json" valid:"Required"`
+	Type     int    `json:"type"`
+	Comment  string `json:"comment"`
 }
 
 type routeEdit struct {
@@ -61,7 +64,7 @@ func RouteCreate(c *gin.Context) {
 		appG.Response(http.StatusOK, errCode, nil)
 		return
 	}
-	adminService := admin_service.Route{PathJson: form.PathJson}
+	adminService := admin_service.Route{PathJson: form.PathJson, Name: form.Name, Type: form.Type, Comment: form.Comment}
 	resData, err := adminService.RouteCreate()
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR, nil)
