@@ -3,6 +3,7 @@ package admin_service
 import (
 
 	// "github.com/y-transport-server/controller/admin_controller"
+
 	"strings"
 
 	"github.com/goinggo/mapstructure"
@@ -44,6 +45,7 @@ func RouteList(data *ListParam) model.PageJson {
 		Total: total,
 		Size:  len(routes),
 	}
+
 	return page
 }
 

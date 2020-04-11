@@ -2,7 +2,6 @@ package admin_controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -85,7 +84,6 @@ func RouteEdit(c *gin.Context) {
 		return
 	}
 	b, _ := json.Marshal(form.PathJson)
-	fmt.Println(string(b))
 	adminService := admin_service.Route{Id: uint(id), PathJson: string(b), Name: form.Name, Type: form.Type, Comment: form.Comment}
 	resData, err := adminService.RouteEdit()
 	if err != nil {

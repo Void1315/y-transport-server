@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"encoding/base64"
 	"errors"
+	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -27,6 +28,15 @@ type DriverCreateForm struct {
 	Image      map[string]string `json:"image" valid:"Required"`
 }
 
+type DriverEditForm struct {
+	ID         int               `json:"id"`
+	Name       string            `json:"name" valid:"Required"`
+	Phone      string            `json:"phone" valid:"Required;Mobile"`
+	Age        int               `json:"age" valid:"Required";Max(70);Min(18)`
+	DrivingAge int               `json:"driving_age" valid:"Required"`
+	Image      map[string]string `json:"image"`
+}
+
 func DriverList(data *ListParam) model.PageJson {
 	drivers := make([]model.Driver, 0)
 	var driverModel model.Driver
@@ -38,7 +48,7 @@ func DriverList(data *ListParam) model.PageJson {
 	Db.Find(&drivers)
 
 	var total = 0
-	model.Db.Model(&model.Route{}).Where(&driverModel).Count(&total)
+	model.Db.Model(&model.Driver{}).Where(&driverModel).Count(&total)
 
 	page := model.PageJson{
 		Data:  drivers,
@@ -46,6 +56,7 @@ func DriverList(data *ListParam) model.PageJson {
 		Total: total,
 		Size:  len(drivers),
 	}
+	fmt.Println(len(drivers))
 	return page
 }
 
@@ -89,27 +100,29 @@ func DriverOne(id int) (*model.Driver, error) {
 	return driver, nil
 }
 
-func DriverEdit(data *DriverCreateForm) (*model.Driver, error) {
+func DriverEdit(data *DriverEditForm) (*model.Driver, error) {
 	oldDriver := &model.Driver{}
 	model.Db.Find(&oldDriver, data.ID)
 	var re = regexp.MustCompile(`\/(\d+\.\w+)$`)
-	filename := re.FindAllString(oldDriver.Image, -1)[1]
-	image := strings.Split(data.Image["base64"], ",")[1]
-	imgs, err := base64.StdEncoding.DecodeString(image)
-	if err != nil {
-		return nil, errors.New("base64解码错误")
+	filename := re.FindStringSubmatch(oldDriver.Image)[1]
+	if len(data.Image) != 0 {
+		image := strings.Split(data.Image["base64"], ",")[1]
+		imgs, err := base64.StdEncoding.DecodeString(image)
+		if err != nil {
+			return nil, errors.New("base64解码错误")
+		}
+		file, err2 := os.OpenFile("./static/img/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
+		if err2 != nil {
+			return nil, errors.New("创建文件错误")
+		}
+		w := bufio.NewWriter(file) //创建新的 Writer 对象
+		_, err3 := w.WriteString(string(imgs))
+		if err3 != nil {
+			return nil, errors.New("写入文件错误")
+		}
+		w.Flush()
+		defer file.Close()
 	}
-	file, err2 := os.OpenFile("./static/img/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
-	if err2 != nil {
-		return nil, errors.New("创建文件错误")
-	}
-	w := bufio.NewWriter(file) //创建新的 Writer 对象
-	_, err3 := w.WriteString(string(imgs))
-	if err3 != nil {
-		return nil, errors.New("写入文件错误")
-	}
-	w.Flush()
-	defer file.Close()
 
 	driver := &model.Driver{
 		Model:      model.Model{ID: uint(data.ID)},

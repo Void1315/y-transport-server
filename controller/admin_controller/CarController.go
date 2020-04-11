@@ -10,16 +10,7 @@ import (
 	"github.com/y-transport-server/service/admin_service"
 )
 
-type driverCreate struct {
-	Name       string            `json:"name" `
-	Phone      string            `json:"phone" `
-	Age        string            `json:"age" `
-	DrivingAge string            `json:"driving_age" `
-	Image      map[string]string `json:"image" `
-}
-
-//DriverList list
-func DriverList(c *gin.Context) {
+func CarList(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
 	)
@@ -28,14 +19,32 @@ func DriverList(c *gin.Context) {
 		appG.Response(e.ERROR, e.ERROR, nil)
 		return
 	}
-	resData := admin_service.DriverList(data)
+	resData := admin_service.CarList(data)
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }
 
-func DriverOne(c *gin.Context) {
+func CarCreate(c *gin.Context) {
+	var (
+		appG = app.Gin{C: c}
+		// form model.Driver
+		form admin_service.CarCreateForm
+	)
+	_, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(http.StatusOK, errCode, nil)
+		return
+	}
+	resData, err := admin_service.CarCreate(&form)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, nil)
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, resData)
+}
+
+func CarOne(c *gin.Context) {
 	appG := app.Gin{C: c}
 	id, _ := strconv.Atoi(c.Param("id"))
-	result, err := admin_service.DriverOne(id)
+	result, err := admin_service.CarOne(id)
 	if err != nil {
 		appG.Response(e.ERROR, e.ERROR, nil)
 		return
@@ -43,36 +52,17 @@ func DriverOne(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, result)
 }
 
-func DriverCreate(c *gin.Context) {
+func CarEdit(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
-		// form model.Driver
-		form admin_service.DriverCreateForm
+		form admin_service.CarCreateForm
 	)
 	_, errCode := app.BindAndValid(c, &form)
 	if errCode != e.SUCCESS {
 		appG.Response(http.StatusOK, errCode, nil)
 		return
 	}
-	resData, err := admin_service.DriverCreate(&form)
-	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR, nil)
-	}
-	appG.Response(http.StatusOK, e.SUCCESS, resData)
-}
-func DriverEdit(c *gin.Context) {
-	var (
-		appG = app.Gin{C: c}
-		form admin_service.DriverEditForm
-	)
-	id, _ := strconv.Atoi(c.Param("id"))
-	_, errCode := app.BindAndValid(c, &form)
-	form.ID = id
-	if errCode != e.SUCCESS {
-		appG.Response(http.StatusOK, errCode, nil)
-		return
-	}
-	resData, err := admin_service.DriverEdit(&form)
+	resData, err := admin_service.CarEdit(&form)
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR, nil)
 	}
