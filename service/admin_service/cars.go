@@ -5,7 +5,6 @@ import (
 
 	"bufio"
 	"encoding/base64"
-	"encoding/json"
 	"errors"
 
 	"os"
@@ -23,10 +22,11 @@ type UploadImage struct {
 	Type   string `json:"type"`
 	Name   string `json:"name"`
 }
-type SavedImage struct {
-	Path     string `json:"path"`
-	FileName string `json:"file_name"`
-}
+
+// type SavedImage struct {
+// 	Path     string `json:"path"`
+// 	FileName string `json:"file_name"`
+// }
 type CarCreateForm struct {
 	ID       int           `json:"id"`
 	Name     string        `json:"name" valid:"Required"`
@@ -58,15 +58,15 @@ func CarList(data *ListParam) model.PageJson {
 	return page
 }
 
-func SaveImage(images *[]UploadImage) (*[]SavedImage, error) {
-	savedImages := make([]SavedImage, 0)
+func SaveImage(images *[]UploadImage) (*[]model.SavedImage, error) {
+	savedImages := make([]model.SavedImage, 0)
 	for _, image := range *images {
 		base64Str := strings.Split(image.Base64, ",")[1]
 		imgs, err := base64.StdEncoding.DecodeString(base64Str)
 		if err != nil {
 			return nil, errors.New("base64解码错误")
 		}
-		timenow := time.Now().Unix()
+		timenow := time.Now().UnixNano()
 		filename := strconv.FormatInt(timenow, 10) + "." + image.Type
 		file, err2 := os.OpenFile("./static/img/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
 		if err2 != nil {
@@ -79,14 +79,14 @@ func SaveImage(images *[]UploadImage) (*[]SavedImage, error) {
 		}
 		w.Flush()
 		defer file.Close()
-		savedImages = append(savedImages, SavedImage{
+		savedImages = append(savedImages, model.SavedImage{
 			Path:     setting.AppSetting.PrefixUrl + setting.AppSetting.ImageSavePath + filename,
 			FileName: filename,
 		})
 	}
 	return &savedImages, nil
 }
-func EditImage(images *[]UploadImage, oldImages *[]SavedImage) (*[]SavedImage, error) {
+func EditImage(images *[]UploadImage, oldImages *[]model.SavedImage) (*[]model.SavedImage, error) {
 	for _, image := range *oldImages {
 		path := setting.AppSetting.PrefixUrl + setting.AppSetting.ImageSavePath + image.FileName
 		err := os.Remove(path)
@@ -105,17 +105,21 @@ func CarCreate(data *CarCreateForm) (*model.Car, error) {
 	if err != nil {
 		return nil, err
 	}
-	jsonByte, err1 := json.Marshal(savedImages)
-	if err1 != nil {
-		return nil, err1
-	}
+	// jsonByte, err1 := json.Marshal(savedImages)
+	// if err1 != nil {
+	// 	return nil, err1
+	// }
 	car := &model.Car{
 		Name:     data.Name,
 		Phone:    data.Phone,
 		Type:     data.Type,
 		Capacity: data.Capacity,
 		Number:   data.Number,
-		Image:    string(jsonByte),
+		// Image:    string(jsonByte),
+		Image: &model.SavedImageMap{
+			SavedImage: *savedImages,
+			Valid:      true,
+		},
 	}
 	if err2 := model.Db.Save(car).Error; err2 != nil {
 		return nil, err2
@@ -125,20 +129,20 @@ func CarCreate(data *CarCreateForm) (*model.Car, error) {
 
 func CarEdit(data *CarCreateForm) (*model.Car, error) {
 	oldCar := &model.Car{}
-	oldImages := make([]SavedImage, 0)
+	oldImages := make([]model.SavedImage, 0)
 	model.Db.Find(&oldCar, data.ID)
-	err := json.Unmarshal([]byte(oldCar.Image), &oldImages)
-	if err != nil {
-		return nil, err
-	}
+	// err := json.Unmarshal([]byte(oldCar.Image.SavedImage), &oldImages)
+	// if err != nil {
+	// 	return nil, err
+	// }
 	savedImages, err1 := EditImage(&data.Image, &oldImages)
 	if err1 != nil {
 		return nil, err1
 	}
-	jsonByte, err1 := json.Marshal(savedImages)
-	if err1 != nil {
-		return nil, err1
-	}
+	// jsonByte, err1 := json.Marshal(savedImages)
+	// if err1 != nil {
+	// 	return nil, err1
+	// }
 	car := &model.Car{
 		Model:    model.Model{ID: uint(data.ID)},
 		Name:     data.Name,
@@ -146,7 +150,10 @@ func CarEdit(data *CarCreateForm) (*model.Car, error) {
 		Type:     data.Type,
 		Capacity: data.Capacity,
 		Number:   data.Number,
-		Image:    string(jsonByte),
+		Image: &model.SavedImageMap{
+			SavedImage: *savedImages,
+			Valid:      true,
+		},
 	}
 	if err2 := model.Db.Save(car).Error; err2 != nil {
 		return nil, err2
