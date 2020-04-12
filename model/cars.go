@@ -14,7 +14,7 @@ type Car struct {
 	Image    *SavedImageMap `gorm:"type:json;" mapstructure:"image" json:"image"`                   // 车辆图片
 	Capacity int            `gorm:"type:tinyint;DEFAULT:0" mapstructure:"capacity" json:"capacity"` // 最大载客量
 	RouteId  uint           `json:"route_id" mapstructure:"route_id"`                               // belongs to Route 外键关联
-	Route    Route          `json:"route" gorm:"foreignkey:UserRefer"`                              // 关联模型
+	Route    Route          `json:"route" gorm:"foreignkey:RouteId;PRELOAD:true"`                   // 关联模型
 }
 type SavedImage struct {
 	Path     string `json:"path"`

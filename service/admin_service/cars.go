@@ -26,8 +26,7 @@ func CarList(data *ListParam) model.PageJson {
 		return model.PageJson{}
 	}
 	Db := model.Db.Where(&carModel).Limit(data.Limit).Offset((data.Page - 1) * data.Limit).Order(strings.Join(data.Sort[:], " "))
-	Db.Find(&cars)
-
+	Db.Set("gorm:auto_preload", true).Find(&cars)
 	var total = 0
 	model.Db.Model(&model.Car{}).Where(&carModel).Count(&total)
 
@@ -95,7 +94,7 @@ func CarEdit(data *CarCreateForm) (*model.Car, error) {
 func CarOne(id int) (*model.Car, error) {
 	car := &model.Car{}
 
-	if err := model.Db.First(&car, id).Error; err != nil {
+	if err := model.Db.First(&car, id).Related(&car.Route).Error; err != nil {
 		return nil, err
 	}
 	return car, nil
