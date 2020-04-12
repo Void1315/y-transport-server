@@ -57,6 +57,7 @@ func DriverCreate(c *gin.Context) {
 	resData, err := admin_service.DriverCreate(&form)
 	if err != nil {
 		appG.Response(http.StatusOK, e.ERROR, nil)
+		return
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }
@@ -74,7 +75,19 @@ func DriverEdit(c *gin.Context) {
 	}
 	resData, err := admin_service.DriverEdit(&form)
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR, nil)
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
+}
+
+func DriverDelete(c *gin.Context) {
+	appG := app.Gin{C: c}
+	id, _ := strconv.Atoi(c.Param("id"))
+	err := admin_service.DriverDelete(id)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, id)
 }

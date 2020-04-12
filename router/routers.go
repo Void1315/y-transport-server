@@ -41,6 +41,7 @@ func adminRoute(router *gin.Engine) {
 			driver.POST("", admin_controller.DriverCreate)
 			driver.GET("/:id", admin_controller.DriverOne)
 			driver.POST("/edit/:id", admin_controller.DriverEdit)
+			driver.DELETE("/:id", admin_controller.DriverDelete)
 		}
 		car := admin.Group("/car")
 		{

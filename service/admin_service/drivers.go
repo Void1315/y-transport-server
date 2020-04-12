@@ -137,3 +137,22 @@ func DriverEdit(data *DriverEditForm) (*model.Driver, error) {
 	}
 	return driver, nil
 }
+
+func DriverDelete(id int) error {
+	driver := &model.Driver{
+		Model: model.Model{ID: uint(id)},
+	}
+	if err0 := model.Db.Find(&driver).Error; err0 != nil {
+		return err0
+	}
+	// var re = regexp.MustCompile(`\/(\d+\.\w+)$`)
+	// filename := re.FindStringSubmatch(driver.Image)[1]
+	// err1 := os.Remove("./static/img/" + filename)
+	// if err1 != nil {
+	// 	return err1
+	// }
+	if err := model.Db.Delete(&driver).Error; err != nil {
+		return err
+	}
+	return nil
+}
