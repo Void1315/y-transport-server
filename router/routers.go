@@ -32,8 +32,10 @@ func adminRoute(router *gin.Engine) {
 		{
 			route.GET("", admin_controller.RouteList)
 			route.POST("", admin_controller.RouteCreate)
+			route.POST("/all", admin_controller.RouteAll)
 			route.GET("/:id", admin_controller.RouteOne)
 			route.POST("/edit/:id", admin_controller.RouteEdit)
+
 		}
 		driver := admin.Group("/driver")
 		{

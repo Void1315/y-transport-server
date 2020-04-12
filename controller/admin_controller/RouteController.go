@@ -27,6 +27,18 @@ type routeEdit struct {
 	Comment  string      `json:"comment"`
 }
 
+func RouteAll(c *gin.Context) {
+	var (
+		appG = app.Gin{C: c}
+	)
+	resData, err := admin_service.RouteAll()
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, resData)
+}
+
 func RouteList(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}

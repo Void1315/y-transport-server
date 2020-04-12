@@ -66,7 +66,7 @@ func DriverCreate(data *DriverCreateForm) (*model.Driver, error) {
 	if err != nil {
 		return nil, errors.New("base64解码错误")
 	}
-	timenow := time.Now().Unix()
+	timenow := time.Now().UnixNano()
 	filename := strconv.FormatInt(timenow, 10) + "." + data.Image["type"]
 	file, err2 := os.OpenFile("./static/img/"+filename, os.O_CREATE|os.O_WRONLY, 0644)
 	if err2 != nil {

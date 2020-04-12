@@ -16,6 +16,7 @@ type CarCreateForm struct {
 	Image    []util.UploadImage `json:"image" valid:"Required"`
 	Capacity int                `json:"capacity"  valid:"Required;"`
 	Number   string             `json:"number"  valid:"Required;"`
+	RouteId  uint               `json:"route_id"  valid:"Required;"`
 }
 
 func CarList(data *ListParam) model.PageJson {
@@ -50,6 +51,7 @@ func CarCreate(data *CarCreateForm) (*model.Car, error) {
 		Type:     data.Type,
 		Capacity: data.Capacity,
 		Number:   data.Number,
+		RouteId:  data.RouteId,
 		Image: &model.SavedImageMap{
 			SavedImage: *savedImages,
 			Valid:      true,
@@ -63,8 +65,10 @@ func CarCreate(data *CarCreateForm) (*model.Car, error) {
 
 func CarEdit(data *CarCreateForm) (*model.Car, error) {
 	oldCar := &model.Car{}
-	oldImages := make([]model.SavedImage, 0)
+	// oldImages := make([]model.SavedImage, 0)
+
 	model.Db.Find(&oldCar, data.ID)
+	oldImages := oldCar.Image.SavedImage
 	savedImages, err1 := util.EditImage(&data.Image, &oldImages)
 	if err1 != nil {
 		return nil, err1
@@ -76,6 +80,7 @@ func CarEdit(data *CarCreateForm) (*model.Car, error) {
 		Type:     data.Type,
 		Capacity: data.Capacity,
 		Number:   data.Number,
+		RouteId:  data.RouteId,
 		Image: &model.SavedImageMap{
 			SavedImage: *savedImages,
 			Valid:      true,

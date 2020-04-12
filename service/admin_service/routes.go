@@ -25,6 +25,14 @@ type ListParam struct {
 	Filter map[string]string `json:"filter"`
 }
 
+func RouteAll() (*[]model.Route, error) {
+	routers := &[]model.Route{}
+	if err := model.Db.Find(&routers).Error; err != nil {
+		return nil, err
+	}
+	return routers, nil
+}
+
 //RouteList 分页
 func RouteList(data *ListParam) model.PageJson {
 	routes := make([]model.Route, 0)
