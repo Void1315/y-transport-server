@@ -6,17 +6,17 @@ import (
 
 //User Users 表结构
 type User struct {
-	gorm.Model
-	Username   string `json:"username";gorm:"size:50;DEFAULT:''"`       // 列名为 `username` 用户名称
-	UsernameZh string `json:"username_zh";gorm:"size:10;DEFAULT:''"`    // 列名为 `username_zh` 用户中文名称
-	Email      string `json:"email";gorm:"size:30;DEFAULT:''"`          // 列名为 `email` 账户邮箱，
-	Avatar     string `json:"avatar";gorm:"size:255;DEFAULT:''"`        // 列名为 `avatar` 头像绝对路径,url
-	IdNumber   string `json:"id_number";gorm:"size:30;DEFAULT:''"`      // 列名为 `id_number` 身份证号码
-	Phone      string `json:"phone";gorm:"size:20;DEFAULT:'';NOT NULL"` // 列名为 `phone` 手机号码
-	Password   string `json:"password";gorm:"size:100;DEFAULT:''"`      // 列名为 `password` 密码的sha256值
-	Salt       string `json:"salt";gorm:"size:20;DEFAULT:''"`           // 列名为 `salt` 密码盐
-	Token      string `json:"token";gorm:"size:512;DEFAULT:''"`         // 列名为 `token` jwt登录凭证
-	Type       bool   `json:"type";gorm:"NOT NULL;DEFAULT:0"`           // 列名为 `type` 用户类型 0本站 1第三方
+	Model
+	Username   string `gorm:"size:50;DEFAULT:''" json:"username"`       // 列名为 `username` 用户名称
+	UsernameZh string `gorm:"size:10;DEFAULT:''" json:"username_zh"`    // 列名为 `username_zh` 用户中文名称
+	Email      string `gorm:"size:30;DEFAULT:''" json:"email"`          // 列名为 `email` 账户邮箱，
+	Avatar     string `gorm:"size:255;DEFAULT:''" json:"avatar"`        // 列名为 `avatar` 头像绝对路径,url
+	IdNumber   string `gorm:"size:30;DEFAULT:''" json:"id_number"`      // 列名为 `id_number` 身份证号码
+	Phone      string `gorm:"size:20;DEFAULT:'';NOT NULL" json:"phone"` // 列名为 `phone` 手机号码
+	Password   string `gorm:"size:100;DEFAULT:''" json:"password"`      // 列名为 `password` 密码的sha256值
+	Salt       string `gorm:"size:20;DEFAULT:''" json:"salt"`           // 列名为 `salt` 密码盐
+	Token      string `gorm:"size:512;DEFAULT:''" json:"token"`         // 列名为 `token` jwt登录凭证
+	Type       bool   `gorm:"NOT NULL;DEFAULT:0" json:"type"`           // 列名为 `type` 用户类型 0本站 1第三方
 }
 
 //CreatUser 创建用户

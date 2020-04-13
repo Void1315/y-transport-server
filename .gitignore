@@ -12,3 +12,5 @@
 *.log
 vendor/
 output/*
+
+__debug_bin
