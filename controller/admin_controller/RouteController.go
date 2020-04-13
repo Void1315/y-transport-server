@@ -99,7 +99,19 @@ func RouteEdit(c *gin.Context) {
 	adminService := admin_service.Route{Id: uint(id), PathJson: string(b), Name: form.Name, Type: form.Type, Comment: form.Comment}
 	resData, err := adminService.RouteEdit()
 	if err != nil {
-		appG.Response(http.StatusOK, e.ERROR, nil)
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
+}
+
+func RouteDelete(c *gin.Context) {
+	appG := app.Gin{C: c}
+	id, _ := strconv.Atoi(c.Param("id"))
+	err := admin_service.RouteDelete(uint(id))
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
 }

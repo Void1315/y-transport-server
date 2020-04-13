@@ -94,8 +94,16 @@ func CarEdit(data *CarCreateForm) (*model.Car, error) {
 func CarOne(id int) (*model.Car, error) {
 	car := &model.Car{}
 
-	if err := model.Db.First(&car, id).Related(&car.Route).Error; err != nil {
+	if err := model.Db.Set("gorm:auto_preload", true).First(&car, id).Error; err != nil {
 		return nil, err
 	}
 	return car, nil
+}
+
+func CarAll() (*[]model.Car, error) {
+	cars := new([]model.Car)
+	if err := model.Db.Find(&cars).Error; err != nil {
+		return nil, err
+	}
+	return cars, nil
 }

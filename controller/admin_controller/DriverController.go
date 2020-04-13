@@ -11,11 +11,11 @@ import (
 )
 
 type driverCreate struct {
-	Name       string            `json:"name" `
-	Phone      string            `json:"phone" `
-	Age        string            `json:"age" `
-	DrivingAge string            `json:"driving_age" `
-	Image      map[string]string `json:"image" `
+	Name       string            `json:"name" valid:"Required;"`
+	Phone      string            `json:"phone" valid:"Required;"`
+	Age        string            `json:"age" valid:"Required;"`
+	DrivingAge string            `json:"driving_age" valid:"Required;"`
+	Image      map[string]string `json:"image" valid:"Required;"`
 }
 
 //DriverList list

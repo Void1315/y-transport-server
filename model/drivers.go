@@ -7,4 +7,5 @@ type Driver struct {
 	Image      string `gorm:"size:255;DEFAULT:'';NOT NULL" mapstructure:"image" json:"image"`       // 司机照片
 	DrivingAge int    `gorm:"type:tinyint;DEFAULT:0" mapstructure:"driving_age" json:"driving_age"` // 司机驾龄
 	Age        int    `gorm:"type:tinyint;DEFAULT:0" mapstructure:"age" json:"age"`                 // 司机年龄
+	CarId      uint   `gorm:"DEFAULT:0" mapstructure:"car_id" json:"car_id"`
 }

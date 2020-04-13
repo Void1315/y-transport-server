@@ -93,3 +93,19 @@ func (r *Route) RouteEdit() (*model.Route, error) {
 	}
 	return route, nil
 }
+
+func RouteDelete(id uint) error {
+	route := &model.Route{
+		Model: model.Model{ID: id},
+	}
+	if err := model.Db.First(route).Error; err != nil {
+		return err
+	}
+	if err1 := model.Db.Table("cars").Where("route_id = ?", id).Updates(map[string]interface{}{"route_id": 0}).Error; err1 != nil {
+		return err1
+	}
+	if err2 := model.Db.Delete(&route).Error; err2 != nil {
+		return err2
+	}
+	return nil
+}

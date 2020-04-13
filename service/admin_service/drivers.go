@@ -26,6 +26,7 @@ type DriverCreateForm struct {
 	Age        int               `json:"age" valid:"Required";Max(70);Min(18)`
 	DrivingAge int               `json:"driving_age" valid:"Required"`
 	Image      map[string]string `json:"image" valid:"Required"`
+	CarId      uint              `json:"car_id" `
 }
 
 type DriverEditForm struct {
@@ -35,6 +36,7 @@ type DriverEditForm struct {
 	Age        int               `json:"age" valid:"Required";Max(70);Min(18)`
 	DrivingAge int               `json:"driving_age" valid:"Required"`
 	Image      map[string]string `json:"image"`
+	CarId      uint              `json:"car_id" `
 }
 
 func DriverList(data *ListParam) model.PageJson {
@@ -85,6 +87,7 @@ func DriverCreate(data *DriverCreateForm) (*model.Driver, error) {
 		Image:      setting.AppSetting.PrefixUrl + setting.AppSetting.ImageSavePath + filename,
 		DrivingAge: data.DrivingAge,
 		Age:        data.Age,
+		CarId:      data.CarId,
 	}
 	if err := model.Db.Save(&driverModel).Error; err != nil {
 		return nil, err
@@ -131,6 +134,7 @@ func DriverEdit(data *DriverEditForm) (*model.Driver, error) {
 		Age:        data.Age,
 		DrivingAge: data.DrivingAge,
 		Image:      setting.AppSetting.PrefixUrl + setting.AppSetting.ImageSavePath + filename,
+		CarId:      data.CarId,
 	}
 	if err := model.Db.Save(driver).Error; err != nil {
 		return nil, err

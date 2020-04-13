@@ -52,6 +52,16 @@ func CarOne(c *gin.Context) {
 	appG.Response(http.StatusOK, e.SUCCESS, result)
 }
 
+func CarAll(c *gin.Context) {
+	appG := app.Gin{C: c}
+	result, err := admin_service.CarAll()
+	if err != nil {
+		appG.Response(e.ERROR, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, result)
+}
+
 func CarEdit(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
