@@ -54,6 +54,14 @@ func adminRoute(router *gin.Engine) {
 			car.GET("/:id", admin_controller.CarOne)
 			car.POST("/edit/:id", admin_controller.CarEdit)
 		}
+		trip := admin.Group("/trip")
+		{
+			trip.GET("", admin_controller.TripList)
+			trip.POST("", admin_controller.TripCreate)
+			trip.GET("/:id", admin_controller.TripOne)
+			trip.POST("/edit/:id", admin_controller.TripEdit)
+
+		}
 		admin.POST("/login", admin_controller.Login)
 		admin.GET("/logout", admin_controller.Logout)
 		admin.GET("/check", jwt.JWT(), admin_controller.AdminCheck)
