@@ -23,7 +23,6 @@ func init() {
 }
 func main() {
 	r := router.InitRouter()
-
 	readTimeout := setting.ServerSetting.ReadTimeout
 	writeTimeout := setting.ServerSetting.WriteTimeout
 	endPoint := fmt.Sprintf(":%d", setting.ServerSetting.HttpPort)

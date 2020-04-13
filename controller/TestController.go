@@ -1,10 +1,11 @@
 package controller
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
-	"net/http"
 )
 
 // Ping 测试连接，放回pong
