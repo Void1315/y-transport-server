@@ -62,6 +62,16 @@ func adminRoute(router *gin.Engine) {
 			trip.POST("/edit/:id", admin_controller.TripEdit)
 
 		}
+		zfb := admin.Group("/zfb")
+		{
+			zfb.GET("/return", admin_controller.OrderReturn)
+		}
+		order := admin.Group("/order")
+		{
+			order.GET("", admin_controller.OrderList)
+			order.POST("", admin_controller.OrderCreate)
+			order.GET("/:id", admin_controller.OrderOne)
+		}
 		admin.POST("/login", admin_controller.Login)
 		admin.GET("/logout", admin_controller.Logout)
 		admin.GET("/check", jwt.JWT(), admin_controller.AdminCheck)
