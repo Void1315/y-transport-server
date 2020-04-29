@@ -1,3 +1,10 @@
+/*
+ * @Author: Asahi
+ * @Date: 2020-04-28 18:46:56
+ * @LastEditors: Asahi
+ * @LastEditTime: 2020-04-28 19:15:21
+ * @Description: 介绍
+ */
 package service
 
 import (
@@ -10,17 +17,21 @@ import (
 )
 
 var (
-	appId = "2021001155683198"
+	appId = "2016102200741141" // 沙箱
+	// appId = "2021001155683198"
 	// 应用私钥（跟csr文件同级目录）
 	privateKey = "MIIEogIBAAKCAQEAnr7NAi3yCX66nidkAtB1gQUUyENSVrzlchcXMgX86POfvwnixYJlMvc1VeG+lBfsAiXrevJjIaMnUCu2JF1bSI0anQOZ+QykSdT7+oy3XEfO6n6hSR65NH25dnSSyUv49kQyxFe8+lZMTLtBx7GZ8GL9VVqsZnxkfsnUTJCtbI6CScXBQs2JEFqT47O7icDsyXVo+bU3izPcutfmUNXNCxzZslQ+uajxR1cNpTQH8lILTJwFHRBko/699JbovYAmi/oocL2N46me79R6s6WexDzm5+n2cqLlEJZdXuNG3d52p5YoUBhIloaOKZqkJHe+SItljiWQYjFGPJHwhkqYYQIDAQABAoIBAHJJDzL4fP4U/KmL1laoWVAvpkyfGxJTICTJNuvOn8veSS2yIk7rl4vfqchQo3He3wyU3DlBc9jtqwnuzkzT4ToUTAqqYxmH3mdBLL+uuvt2vyLXU6pesht2QCVlu5+sUGqLorj0KZtYscm0LqFj3V3RBm2CwAdwmrElAPC2YAR8WKW+7mLYpYbkdFUjWGElM4yIsSs3D3rOFALxh/2vVJUk7q8UR88qEw5jTztEd9St3QnbHCEeANeL+HsHFq6II+gUJ6vnK7B3XzUkKY9J5pW32JNykPWV1iHQxUc1MUr5CIcXQMbbnZfP1/x2y6AZD/y08Cv3DxsLfesNJfXxmRkCgYEA4F/+Xx6d+AqBpOgiYPwJj/eRZl/9doGcPIbAtPobCKAht1KMv0NJGz2Edcld8YEqSWNWoSmbpju1Yrad+rP9DcAPbfwGIeFUfc8VhIOFaPAHlXYPag543pywdFVdJBgB8irNwjLHJnA3DYHqdfamVblcBy//diUwTZrVqNgOQGsCgYEAtR6531ZhMx2aBSpiIVSYgfoo3XpHi3bAOmCd/z3Au/N5mYZMFrcHX2f9pL9PHtL2X5YgFS2TkslRLiX1y5ij41RdUpLCjs/pBw9Br+IrvwcZlHJChrRG9QQfKxG8bzt65jdbATGu6RLH3ptCRmJQdV2OQA3qk1/E4XXuwZIWzWMCgYAqWbQXnB3Q/Zqu16n1iFz9sYreOewLfDdTLVQeVL7Zh/AVPB2Y1EhuPdRMry9uMCUdKQTm8oWQgOChuzpiYaq397Jx3goCRxe9j2LOWkzKG9Qyn9AVAppJ2mVr79jewTFM1kt0BkWUucWKZSUuEtoegBgguyyKzkYpv7noXq+B9QKBgDxBY578ksu5nmL3jbv+89nSCsRcCO9J63vAZu/icHtW7e54clngPFCuPQERMFZV4uc7/6JsDjt4REyxDkvUlTls+Lse3iE65BCYL8c+3ETqLMVpGd7MnQqoe2INvX3X8PQkGF+WUtVxjRLu3iaiUJgrLsb6mj67TrmfTXYSjwl3AoGAZJgi9s/vzQ31eB0Wvl8Mx8TG2SOmiKH6/LvVrydw64mQuBi8ArahF45Da32LxxFOU+CqqnrL8RH7u0W8goZ4MrlAHxwydyBM405WS64NEqAaTadcqih905+2E8fd7NFbUgZmxIpBIBE8IA3pvP9cQaNtsw/5cXHWLRFKoRTbWaM="
 	client, _  = alipay.New(appId, privateKey, false)
+	aliPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnr7NAi3yCX66nidkAtB1gQUUyENSVrzlchcXMgX86POfvwnixYJlMvc1VeG+lBfsAiXrevJjIaMnUCu2JF1bSI0anQOZ+QykSdT7+oy3XEfO6n6hSR65NH25dnSSyUv49kQyxFe8+lZMTLtBx7GZ8GL9VVqsZnxkfsnUTJCtbI6CScXBQs2JEFqT47O7icDsyXVo+bU3izPcutfmUNXNCxzZslQ+uajxR1cNpTQH8lILTJwFHRBko/699JbovYAmi/oocL2N46me79R6s6WexDzm5+n2cqLlEJZdXuNG3d52p5YoUBhIloaOKZqkJHe+SItljiWQYjFGPJHwhkqYYQIDAQAB"
+	
 )
 
 //网站扫码支付
 func WebPageAlipay() {
+	client.LoadAliPayPublicKey(aliPublicKey)
 	pay := alipay.TradePagePay{}
 	// 支付成功之后，支付宝将会重定向到该 URL
-	pay.ReturnURL = "http://www.yhy1315/api/admin/zfb/return"
+	pay.ReturnURL = "http://www.yhy1315.cn/api/admin/zfb/return"
 	//支付标题
 	pay.Subject = "支付宝支付测试"
 	//订单号，一个订单号只能支付一次
