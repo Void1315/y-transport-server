@@ -87,6 +87,7 @@ func (r *Route) RouteEdit() (*model.Route, error) {
 		PathJson: r.PathJson,
 		Comment:  r.Comment,
 		Name:     r.Name,
+		Type:     r.Type,
 	}
 	if err := model.Db.Save(route).Error; err != nil {
 		return nil, err

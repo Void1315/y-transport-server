@@ -41,6 +41,7 @@ func OrderCreate(data *OrderCreateForm) (*model.Order, error) {
 
 func OrderOne(id int) (*model.Order, error) {
 	order := &model.Order{}
+
 	if err := model.Db.Set("gorm:auto_preload", true).First(&order, id).Error; err != nil {
 		return nil, err
 	}
