@@ -79,3 +79,14 @@ func CarEdit(c *gin.Context) {
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }
+
+func CarDelete(c *gin.Context) {
+	var appG = app.Gin{C: c}
+	id, _ := strconv.Atoi(c.Param("id"))
+	err := admin_service.CarDelete(id)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, id)
+}

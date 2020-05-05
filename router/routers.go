@@ -17,6 +17,7 @@ func InitRouter() *gin.Engine {
 	store := cookie.NewStore([]byte("wqld1315"))
 	router.Static("/static", "./static")
 	router.Use(sessions.Sessions("ysession", store))
+	router.GET("/check_order/:uuid", admin_controller.CheckOrder)
 	testRouter(router)
 	authRouter(router)
 	adminRoute(router)
@@ -53,6 +54,7 @@ func adminRoute(router *gin.Engine) {
 			car.POST("/all", admin_controller.CarAll)
 			car.GET("/:id", admin_controller.CarOne)
 			car.POST("/edit/:id", admin_controller.CarEdit)
+			car.DELETE("/:id", admin_controller.CarDelete)
 		}
 		trip := admin.Group("/trip")
 		{
@@ -60,7 +62,8 @@ func adminRoute(router *gin.Engine) {
 			trip.POST("", admin_controller.TripCreate)
 			trip.GET("/:id", admin_controller.TripOne)
 			trip.POST("/edit/:id", admin_controller.TripEdit)
-
+			trip.DELETE("/:id", admin_controller.TripDelete)
+			trip.POST("/get_trip", admin_controller.TripWithRoute)
 		}
 		zfb := admin.Group("/zfb")
 		{

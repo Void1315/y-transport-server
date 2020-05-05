@@ -102,11 +102,27 @@ func RouteDelete(id uint) error {
 	if err := model.Db.First(route).Error; err != nil {
 		return err
 	}
+	if err0 := model.Db.Delete(&route).Error; err0 != nil {
+		return err0
+	}
+	// if err1 := model.Db.Table("cars").Where("route_id = ?", id).Updates(map[string]interface{}{"route_id": 0}).Error; err1 != nil {
+	// 	return err1
+	// }
+	return nil
+}
+
+func RouteDeleteTrue(id uint) error {
+	route := &model.Route{
+		Model: model.Model{ID: id},
+	}
+	if err := model.Db.Unscoped().First(route).Error; err != nil {
+		return err
+	}
+	if err0 := model.Db.Unscoped().Delete(&route).Error; err0 != nil {
+		return err0
+	}
 	if err1 := model.Db.Table("cars").Where("route_id = ?", id).Updates(map[string]interface{}{"route_id": 0}).Error; err1 != nil {
 		return err1
-	}
-	if err2 := model.Db.Delete(&route).Error; err2 != nil {
-		return err2
 	}
 	return nil
 }

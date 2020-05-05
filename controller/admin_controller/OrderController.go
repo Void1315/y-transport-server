@@ -1,12 +1,14 @@
 package admin_controller
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/y-transport-server/pkg/app"
 	"github.com/y-transport-server/pkg/e"
+
 	"github.com/y-transport-server/service/admin_service"
 )
 
@@ -27,7 +29,6 @@ func OrderList(c *gin.Context) {
 func OrderCreate(c *gin.Context) {
 	var (
 		appG = app.Gin{C: c}
-		// form model.Driver
 		form admin_service.OrderCreateForm
 	)
 	_, errCode := app.BindAndValid(c, &form)
@@ -45,7 +46,15 @@ func OrderCreate(c *gin.Context) {
 
 func OrderReturn(c *gin.Context) {
 	appG := app.Gin{C: c}
-	appG.Response(http.StatusOK, e.SUCCESS, "完事")
+	uuid := c.Query("out_trade_no")
+	data, err := admin_service.OrderComplete(uuid)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	s := fmt.Sprintf(`<h1>请保存车票二维码,二维码用于乘车验票!</h1><img src="%s"></img>`, data)
+	c.String(200, s)
 }
 
 func OrderOne(c *gin.Context) {
@@ -57,4 +66,17 @@ func OrderOne(c *gin.Context) {
 		return
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, result)
+}
+
+func CheckOrder(c *gin.Context) {
+	appG := app.Gin{C: c}
+	uuid := c.Param("uuid")
+	err := admin_service.CheckOrder(uuid)
+	if err != nil {
+		appG.Response(e.ERROR, e.ERROR, nil)
+		return
+	}
+	c.Header("Content-Type", "text/html; charset=utf-8")
+	s := fmt.Sprintf(`<h1>订单验证完成!请上车</h1>`)
+	c.String(200, s)
 }

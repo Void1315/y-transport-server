@@ -70,3 +70,34 @@ func TripEdit(c *gin.Context) {
 	}
 	appG.Response(http.StatusOK, e.SUCCESS, resData)
 }
+
+func TripDelete(c *gin.Context) {
+	var (
+		appG = app.Gin{C: c}
+	)
+	id, _ := strconv.Atoi(c.Param("id"))
+	err := admin_service.TripDelete(id)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, id)
+}
+
+func TripWithRoute(c *gin.Context) {
+	var (
+		appG = app.Gin{C: c}
+		form admin_service.TripWithRoute
+	)
+	_, errCode := app.BindAndValid(c, &form)
+	if errCode != e.SUCCESS {
+		appG.Response(http.StatusOK, errCode, nil)
+		return
+	}
+	res, err := admin_service.GetTripWithRoute(form.RouteId)
+	if err != nil {
+		appG.Response(http.StatusOK, e.ERROR, err)
+		return
+	}
+	appG.Response(http.StatusOK, e.SUCCESS, res)
+}
