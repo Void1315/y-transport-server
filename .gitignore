@@ -12,5 +12,6 @@
 *.log
 vendor/
 output/*
-
+static/pay/*
+static/img/*
 __debug_bin
