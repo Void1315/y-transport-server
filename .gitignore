@@ -13,4 +13,7 @@
 vendor/
 output/*
 
+# 忽略私钥
+privateKey
+
 __debug_bin
