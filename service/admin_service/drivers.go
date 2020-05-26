@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"os"
 	"regexp"
 	"strconv"
@@ -58,7 +57,6 @@ func DriverList(data *ListParam) model.PageJson {
 		Total: total,
 		Size:  len(drivers),
 	}
-	fmt.Println(len(drivers))
 	return page
 }
 

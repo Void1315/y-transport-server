@@ -107,3 +107,39 @@ func CarAll() (*[]model.Car, error) {
 	}
 	return cars, nil
 }
+
+func CarDelete(id int) error {
+	car := &model.Car{
+		Model: model.Model{ID: uint(id)},
+	}
+	if err := model.Db.Find(&car).Error; err != nil {
+		return err
+	}
+	if err0 := model.Db.Delete(&car).Error; err0 != nil {
+		return err0
+	}
+
+	return nil
+}
+
+// CarDeleteTrue 物理删除
+func CarDeleteTrue(id int) error {
+	car := &model.Car{
+		Model: model.Model{ID: uint(id)},
+	}
+	if err := model.Db.Unscoped().Find(&car).Error; err != nil {
+		return err
+	}
+	if err0 := model.Db.Unscoped().Delete(&car).Error; err0 != nil {
+		return err0
+	}
+	// 删除关联司机
+	if err1 := model.Db.Table("drivers").Where("car_id = ?", id).Updates(map[string]interface{}{"car_id": 0}).Error; err1 != nil {
+		return err1
+	}
+	//删除关联车次
+	if err2 := model.Db.Table("trips").Where("car_id = ?", id).Updates(map[string]interface{}{"car_id": 0}).Error; err2 != nil {
+		return err2
+	}
+	return nil
+}

@@ -12,5 +12,10 @@
 *.log
 vendor/
 output/*
+static/pay/*
+static/img/*
+
+# 忽略私钥
+privateKey
 
 __debug_bin
