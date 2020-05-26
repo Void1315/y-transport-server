@@ -18,7 +18,7 @@ var (
 	appId = "2016102200741141" // 沙箱
 	// appId = "2021001155683198"
 	// 应用私钥（跟csr文件同级目录）
-	privateKey   = readPrivateKey() // 读取私钥
+	privateKey   = readPrivateKey() //  读取私钥
 	client, _    = alipay.New(appId, privateKey, false)
 	aliPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnr7NAi3yCX66nidkAtB1gQUUyENSVrzlchcXMgX86POfvwnixYJlMvc1VeG+lBfsAiXrevJjIaMnUCu2JF1bSI0anQOZ+QykSdT7+oy3XEfO6n6hSR65NH25dnSSyUv49kQyxFe8+lZMTLtBx7GZ8GL9VVqsZnxkfsnUTJCtbI6CScXBQs2JEFqT47O7icDsyXVo+bU3izPcutfmUNXNCxzZslQ+uajxR1cNpTQH8lILTJwFHRBko/699JbovYAmi/oocL2N46me79R6s6WexDzm5+n2cqLlEJZdXuNG3d52p5YoUBhIloaOKZqkJHe+SItljiWQYjFGPJHwhkqYYQIDAQAB"
 	// aliPublicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEArgkmgqaRXFZtxU/TT0jNiEQSUPa/Evzp21iUGgy8o8GzMOvBlyA9WykbXA6oELlQT/0v5Ank+8IYp1ObcIWeZkFA76LyNM7wgrVeY7hx/gj8ioFL+E3l8u498sS6ZJlJsWyoC++9IyVjqLqk2M0xmMt4ECRX52LdxU3vN117s+AaHgdorIChw++1gx/nH8txV43Vs0npNSJBHrk0hYMhHqLzS5ZzSmdWJW+04ykxEzo5ORLwo7cg1/fbiz/l6/9P2Lpk9RvxwTjqEg+2SeyPLZ5p7zzT1oJhBr25rg7foMNmCtuAuKaKKX3YxSIa0m7MeuCvCqi8OeQUReqE1eaAtQIDAQAB"
