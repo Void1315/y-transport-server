@@ -14,7 +14,16 @@ import (
 type OrderCreateForm struct {
 	StartId uint `json:"start_id"`
 	EndId   uint `json:"end_id"`
+	TripId  uint `json:"trip_id"`
 }
+
+const (
+	ORDER_STATUS_ERROR  = iota // 默认异常
+	ORDER_STATUS_UNPAID        // 未支付
+	ORDER_STATUS_PAID          // 已支付
+	ORDER_STATUS_UNDONE        // 未完成
+	ORDER_STATUS_DONE          // 已完成
+)
 
 func OrderList(data *ListParam) model.PageJson {
 	orders := make([]model.Order, 0)
@@ -48,8 +57,9 @@ func OrderCreate(data *OrderCreateForm) (string, error) {
 		UuId:    u2.String(),
 		StartId: data.StartId,
 		EndId:   data.EndId,
+		TripId:  data.TripId,
 		Price:   0.01,
-		Status:  0, // 状态未支付
+		Status:  ORDER_STATUS_UNPAID, // 状态未支付
 	}
 	if err0 := model.Db.Save(&order).Error; err0 != nil {
 		return "", err0
@@ -74,8 +84,8 @@ func OrderComplete(uuid string) (string, error) {
 	if err := model.Db.Where("uu_id = ?", uuid).First(&order).Error; err != nil {
 		return "", err
 	}
-	if order.Status == 0 { // 未支付
-		order.Status = 1 // 已支付
+	if order.Status == ORDER_STATUS_UNPAID { // 未支付
+		order.Status = ORDER_STATUS_PAID // 已支付
 		model.Db.Save(&order)
 	}
 
@@ -91,14 +101,14 @@ func CheckOrder(uuid string) error {
 	if err := model.Db.Where("uu_id = ?", uuid).First(&order).Error; err != nil {
 		return err
 	}
-	if order.Status == 1 { // 已支付
-		order.Status = 2
+	if order.Status == ORDER_STATUS_PAID { // 已支付
+		order.Status = ORDER_STATUS_DONE // 已完成
 		return model.Db.Save(&order).Error
 	}
-	if order.Status == 2 {
+	if order.Status == ORDER_STATUS_DONE {
 		return errors.New("订单已完成")
 	}
-	if order.Status == 0 {
+	if order.Status == ORDER_STATUS_UNPAID {
 		return errors.New("订单未支付")
 	}
 	return errors.New("订单错误")
