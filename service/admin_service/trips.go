@@ -16,6 +16,10 @@ type TripCreateForm struct {
 	EndTime   string `json:"end_time"`
 }
 
+type TripWithRoute struct {
+	RouteId uint `json:"route_id"`
+}
+
 func TripList(data *ListParam) model.PageJson {
 	trips := make([]model.Trip, 0)
 	var tripModel model.Trip
@@ -72,4 +76,43 @@ func TripEdit(data *TripCreateForm) (*model.Trip, error) {
 		return nil, err
 	}
 	return trip, nil
+}
+
+func TripDelete(id int) error {
+	trip := &model.Trip{
+		Model: model.Model{ID: uint(id)},
+	}
+	if err := model.Db.Find(&trip).Error; err != nil {
+		return err
+	}
+	if err0 := model.Db.Delete(&trip).Error; err0 != nil {
+		return err0
+	}
+	return nil
+}
+
+func TripDeleteTrue(id int) error {
+	trip := &model.Trip{
+		Model: model.Model{ID: uint(id)},
+	}
+	if err := model.Db.Unscoped().Find(&trip).Error; err != nil {
+		return err
+	}
+	// 物理删除
+	if err0 := model.Db.Unscoped().Delete(&trip).Error; err0 != nil {
+		return err0
+	}
+	// 关联删除
+	if err1 := model.Db.Table("orders").Where("trip_id = ?", id).Updates(map[string]interface{}{"trip_id": 0}).Error; err1 != nil {
+		return err1
+	}
+	return nil
+}
+
+func GetTripWithRoute(routeId uint) ([]model.Trip, error) {
+	trips := make([]model.Trip, 0)
+	if err := model.Db.Table("trips").Where("car_id IN (?)", model.Db.Table("cars").Select("id").Where("route_id = ?", routeId).SubQuery()).Find(&trips).Error; err != nil {
+		return nil, err
+	}
+	return trips, nil
 }
